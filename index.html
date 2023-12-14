@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Converter</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        padding: 20px;
+        text-align: center;
+        background-color: #f4f4f4;
+      }
+
+      input[type="file"] {
+        margin-bottom: 10px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button {
+        padding: 10px;
+        cursor: pointer;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Convert JSON to CSV or CSV to JSON</h1>
+    <input type="file" id="fileInput" />
+    <button onclick="convertFile()">Convert</button>
+
+    <script>
+      async function convertFile() {
+        const fileInput = document.getElementById("fileInput");
+
+        if (!fileInput.files || fileInput.files.length === 0) {
+          alert("Select a file.");
+          return;
+        }
+
+        const file = fileInput.files[0];
+        try {
+          const fileContent = await readFile(file);
+
+          if (file.name.endsWith(".json")) {
+            // Convert JSON to CSV
+            const csv = convertJsonToCsv(JSON.parse(fileContent));
+            downloadFile(csv, "output.csv");
+          } else if (file.name.endsWith(".csv")) {
+            // Convert CSV to JSON
+            const jsonData = convertCsvToJson(fileContent);
+            downloadFile(JSON.stringify(jsonData, null, 2), "output.json");
+          } else {
+            alert("Unsupported file format.");
+          }
+        } catch (error) {
+          console.error("Error processing the file:", error);
+        }
+      }
+
+      function convertJsonToCsv(jsonData) {
+        const header = Object.keys(jsonData[0]);
+        const csvContent = jsonData.map((row) =>
+          header.map((fieldName) => row[fieldName]).join(",")
+        );
+        return [header.join(","), ...csvContent].join("\n");
+      }
+
+      function convertCsvToJson(csvContent) {
+        const rows = csvContent.split("\n");
+        const header = rows[0].split(",");
+        const jsonData = [];
+
+        for (let i = 1; i < rows.length; i++) {
+          const values = rows[i].split(",");
+          const row = {};
+          for (let j = 0; j < header.length; j++) {
+            row[header[j]] = values[j];
+          }
+          jsonData.push(row);
+        }
+
+        return jsonData;
+      }
+
+      function downloadFile(content, fileName) {
+        const blob = new Blob([content], { type: "text/plain" });
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName;
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
+      function readFile(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (event) => resolve(event.target?.result);
+          reader.onerror = (event) => reject("Error reading the file.");
+          reader.readAsText(file);
+        });
+      }
+    </script>
+  </body>
+</html>
