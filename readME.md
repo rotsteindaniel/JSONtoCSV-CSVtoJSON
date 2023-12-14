@@ -1,14 +1,4 @@
-## Conversor JSON/CSV ou CSV/JSON | Projeto de Código Aberto
-
-🚀 Apaixonado por desenvolvimento de software e código aberto, eu criei um conversor de arquivos que facilita a conversão entre JSON e CSV. Seja transformando dados estruturados em um arquivo JSON para um formato CSV tabular ou vice-versa, este projeto oferece uma solução prática e fácil de usar. Experimente você mesmo e sinta-se à vontade para contribuir!
-
-👨‍💻 Link para o Projeto
-📌 Tecnologias: HTML, JavaScript
-📄 Licença: MIT
-
-# acima colocar no linkedIn e depois apagar daqui para cima no github
-
-# File Converter
+# Conversor de arquivo JSON -> CSV / CSV -> JSON
 
 Este é um simples conversor de arquivos que suporta a conversão entre JSON e CSV. Você pode selecionar um arquivo no formato JSON ou CSV, e o aplicativo converterá para o formato desejado.
 
